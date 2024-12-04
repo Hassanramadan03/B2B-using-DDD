@@ -1,0 +1,19 @@
+{
+  "name": "Hassan-Elsakndry-Quickstart",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "docker-compose up --remove-orphans ",
+    "build": " docker-compose up -d --remove-orphans",
+    "build:forcerecreate": "docker-compose -f docker-compose.yml up --build --force-recreate",
+    "down": "docker-compose -f docker-compose.yml down ",
+    "stop": "docker-compose -f docker-compose.yml stop ",
+    "remove": "docker-compose -f docker-compose.yml rm ",
+    "prune": "docker system prune",
+    "clear": "docker-compose down && docker stop  $(docker ps -aq) && docker rm -f $(docker ps -aq)",
+    "clean": "docker rmi -f $(docker images -f 'dangling=true' -q)",
+    "remove:all:images": "docker rmi $(docker images -a -q)"
+  },
+  "author": "HassanElsakndry",
+  "license": "ISC" 
+}

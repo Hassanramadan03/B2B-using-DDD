@@ -1,0 +1,145 @@
+version: "3.8"
+services:
+  p2p1:
+    build:
+      context: ./p2p
+      dockerfile: Dockerfile
+    container_name: p2p1
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      INSTANCE: p2p1
+      PORT: "3000"
+      REDIS_PORT: "${REDIS_PORT}"
+      REDIS_HOST: "${REDIS_HOST}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PASS: "${DB_PASS}"
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      CACHE_TTL: "${CACHE_TTL}"
+      ENABLE_LOGS_IN_TERMINAL: "${ENABLE_LOGS_IN_TERMINAL}"
+    volumes:
+      - "./p2p:/src/app"
+      - "./p2p/node_modules:/app/node_modules"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - p2p_network
+  p2p2:
+    build:
+      context: ./p2p
+      dockerfile: Dockerfile
+    container_name: p2p2
+    ports:
+      - "3002:3002"
+    restart: always
+    environment:
+      INSTANCE: p2p2
+      PORT: "3002"
+      REDIS_PORT: "${REDIS_PORT}"
+      REDIS_HOST: "${REDIS_HOST}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PASS: "${DB_PASS}"
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      CACHE_TTL: "${CACHE_TTL}"
+      ENABLE_LOGS_IN_TERMINAL: "${ENABLE_LOGS_IN_TERMINAL}"
+    volumes:
+      - "./p2p:/src/app"
+      - "./p2p/node_modules:/app/node_modules"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - p2p_network
+  p2p3:
+    build:
+      context: ./p2p
+      dockerfile: Dockerfile
+    container_name: p2p3
+    ports:
+      - "3003:3003"
+    restart: always
+    environment:
+      INSTANCE: p2p3
+      PORT: "3003"
+      REDIS_PORT: "${REDIS_PORT}"
+      REDIS_HOST: "${REDIS_HOST}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PASS: "${DB_PASS}"
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      CACHE_TTL: "${CACHE_TTL}"
+      ENABLE_LOGS_IN_TERMINAL: "${ENABLE_LOGS_IN_TERMINAL}"
+    volumes:
+      - "./p2p:/src/app"
+      - "./p2p/node_modules:/app/node_modules"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - p2p_network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    expose:
+      - 9090
+    ports:
+      - "9090:443"  
+    networks:
+      - p2p_network
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=myuser
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes:
+      - ./dbs/mongod.conf:/etc/mongod.conf
+      - ./dbs/mongodb.pem:/etc/ssl/mongodb.pem
+      - ./dbs/ca.crt:/etc/ssl/ca.crt
+      - ./dbs/data:/var/lib/mongodb
+    ports:
+      - "27017:27017"
+    command:
+      [
+        "mongod",
+        "--bind_ip",
+        "0.0.0.0",
+        "--tlsMode",
+        "requireTLS",
+        "--tlsCertificateKeyFile",
+        "/etc/ssl/mongodb.pem",
+        "--tlsCAFile",
+        "/etc/ssl/ca.crt",
+      ]
+    networks:
+      - p2p_network
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./dbs/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    networks:
+      - p2p_network
+networks:
+   p2p_network: 
+    name: p2p_network
+    external: true
+
+
+

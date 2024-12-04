@@ -1,0 +1,20 @@
+src/
+├── common/               # Shared utilities, constants, and DTOs
+├── core/                       # Abstract Interfaces and Base Classes
+│   ├── interfaces/
+│   │   ├── IDataLayer.ts        # Interface for generic data operations
+│   │   └── IRpcService.ts       # Interface for RPC services
+├── infrastructure/             # Framework-independent components
+│   ├── transport/
+│   │   ├── dht.service.ts       # Handles peer discovery with HyperDHT
+│   │   └── rpc.service.ts       # Manages RPC methods and connections
+│   ├── data/
+│   │   ├── hypercore.service.ts # Raw data management (Hypercore)
+│   │   └── hyperbee.service.ts  # Structured data storage (Hyperbee)
+├── modules/                    # Feature Modules
+│   ├── generic/                # Generic service for CRUD operations
+│   │   ├── generic.controller.ts # API endpoints for CRUD operations
+│   │   ├── generic.service.ts    # Handles business logic for generic data
+│   │   └── hyperbee.service.ts   # Hyperbee-based data handling
+├── app.module.ts               # Main NestJS application module
+├── main.ts                     # NestJS application entry point
